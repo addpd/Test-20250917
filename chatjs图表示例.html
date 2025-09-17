@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据报表页面 - Chart.js</title>
+    <!-- 修复：移除 CDN 链接末尾的空格 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- 页面标题 -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">数据报表</h1>
+            <p class="text-gray-600 mt-2">查看和分析业务数据</p>
+        </div>
+
+        <!-- 数据概览卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 shadow">
+                <div class="flex items-center">
+                    <div class="bg-blue-100 p-3 mr-4">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">总用户数</p>
+                        <p class="text-2xl font-bold">12,361</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 shadow">
+                <div class="flex items-center">
+                    <div class="bg-green-100 p-3 mr-4">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">总收入</p>
+                        <p class="text-2xl font-bold">¥1,234,567</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 shadow">
+                <div class="flex items-center">
+                    <div class="bg-yellow-100 p-3 mr-4">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">总订单</p>
+                        <p class="text-2xl font-bold">5,678</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 shadow">
+                <div class="flex items-center">
+                    <div class="bg-red-100 p-3 mr-4">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">转化率</p>
+                        <p class="text-2xl font-bold">24.8%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 图表区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 折线图 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">销售趋势</h2>
+                <div class="h-80">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 柱状图 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">各品类销售对比</h2>
+                <div class="h-80">
+                    <canvas id="barChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 饼图 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">用户来源分布</h2>
+                <div class="h-80">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+
+            <!-- 雷达图 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">产品性能评估</h2>
+                <div class="h-80">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格区域 -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- 最新订单表格 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">最新订单</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">订单号</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">客户</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">金额</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">状态</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">#ORD-001</td>
+                                <td class="py-3 px-4">张三</td>
+                                <td class="py-3 px-4">¥1,200</td>
+                                <td class="py-3 px-4"><span class="bg-green-100 text-green-800 px-2 py-1">已完成</span></td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">#ORD-002</td>
+                                <td class="py-3 px-4">李四</td>
+                                <td class="py-3 px-4">¥800</td>
+                                <td class="py-3 px-4"><span class="bg-yellow-100 text-yellow-800 px-2 py-1">处理中</span></td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">#ORD-003</td>
+                                <td class="py-3 px-4">王五</td>
+                                <td class="py-3 px-4">¥2,400</td>
+                                <td class="py-3 px-4"><span class="bg-green-100 text-green-800 px-2 py-1">已完成</span></td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">#ORD-004</td>
+                                <td class="py-3 px-4">赵六</td>
+                                <td class="py-3 px-4">¥1,500</td>
+                                <td class="py-3 px-4"><span class="bg-red-100 text-red-800 px-2 py-1">已取消</span></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4">#ORD-005</td>
+                                <td class="py-3 px-4">孙七</td>
+                                <td class="py-3 px-4">¥3,200</td>
+                                <td class="py-3 px-4"><span class="bg-green-100 text-green-800 px-2 py-1">已完成</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 地区销售表格 -->
+            <div class="bg-white p-6 shadow">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">地区销售数据</h2>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">地区</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">销售额</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">增长率</th>
+                                <th class="py-3 px-4 text-left text-gray-500 font-medium">占比</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">华东地区</td>
+                                <td class="py-3 px-4">¥456,789</td>
+                                <td class="py-3 px-4 text-green-600">+12.5%</td>
+                                <td class="py-3 px-4">35%</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">华南地区</td>
+                                <td class="py-3 px-4">¥345,678</td>
+                                <td class="py-3 px-4 text-green-600">+8.2%</td>
+                                <td class="py-3 px-4">28%</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">华北地区</td>
+                                <td class="py-3 px-4">¥234,567</td>
+                                <td class="py-3 px-4 text-red-600">-2.1%</td>
+                                <td class="py-3 px-4">19%</td>
+                            </tr>
+                            <tr class="border-b hover:bg-gray-50">
+                                <td class="py-3 px-4">华中地区</td>
+                                <td class="py-3 px-4">¥123,456</td>
+                                <td class="py-3 px-4 text-green-600">+15.3%</td>
+                                <td class="py-3 px-4">10%</td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="py-3 px-4">其他地区</td>
+                                <td class="py-3 px-4">¥89,123</td>
+                                <td class="py-3 px-4 text-green-600">+5.7%</td>
+                                <td class="py-3 px-4">8%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 详细数据表 -->
+        <div class="bg-white p-6 shadow mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">产品销售数据</h2>
+                <div class="flex space-x-2">
+                    <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2">导出</button>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2">筛选</button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full">
+                    <thead>
+                        <tr class="border-b">
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">产品名称</th>
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">分类</th>
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">销售量</th>
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">收入</th>
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">利润率</th>
+                            <th class="py-3 px-4 text-left text-gray-500 font-medium">库存</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">iPhone 14</td>
+                            <td class="py-3 px-4">手机</td>
+                            <td class="py-3 px-4">1,234</td>
+                            <td class="py-3 px-4">¥9,876,000</td>
+                            <td class="py-3 px-4 text-green-600">35%</td>
+                            <td class="py-3 px-4">456</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">MacBook Pro</td>
+                            <td class="py-3 px-4">电脑</td>
+                            <td class="py-3 px-4">567</td>
+                            <td class="py-3 px-4">¥8,505,000</td>
+                            <td class="py-3 px-4 text-green-600">42%</td>
+                            <td class="py-3 px-4">123</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">iPad Air</td>
+                            <td class="py-3 px-4">平板</td>
+                            <td class="py-3 px-4">890</td>
+                            <td class="py-3 px-4">¥4,450,000</td>
+                            <td class="py-3 px-4 text-green-600">38%</td>
+                            <td class="py-3 px-4">234</td>
+                        </tr>
+                        <tr class="border-b hover:bg-gray-50">
+                            <td class="py-3 px-4">Apple Watch</td>
+                            <td class="py-3 px-4">穿戴设备</td>
+                            <td class="py-3 px-4">2,345</td>
+                            <td class="py-3 px-4">¥5,862,500</td>
+                            <td class="py-3 px-4 text-green-600">32%</td>
+                            <td class="py-3 px-4">567</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="py-3 px-4">AirPods Pro</td>
+                            <td class="py-3 px-4">音频设备</td>
+                            <td class="py-3 px-4">3,456</td>
+                            <td class="py-3 px-4">¥6,912,000</td>
+                            <td class="py-3 px-4 text-green-600">45%</td>
+                            <td class="py-3 px-4">789</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 分页 -->
+        <div class="flex justify-between items-center">
+            <p class="text-gray-600">显示第 1 到 10 项，共 50 项</p>
+            <div class="flex space-x-2">
+                <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2">上一页</button>
+                <button class="bg-blue-600 text-white px-4 py-2">1</button>
+                <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2">2</button>
+                <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2">3</button>
+                <button class="bg-gray-200 hover:bg-gray-300 px-4 py-2">下一页</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 等待DOM加载完成
+        document.addEventListener('DOMContentLoaded', function() {
+            // 折线图 - 销售趋势
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            const lineChart = new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    datasets: [{
+                        label: '销售额',
+                        data: [120000, 190000, 150000, 180000, 220000, 250000, 280000, 300000, 270000, 240000, 290000, 320000],
+                        borderColor: 'rgb(59, 130, 246)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }, {
+                        label: '订单数',
+                        data: [800, 1200, 950, 1100, 1400, 1600, 1800, 2000, 1700, 1500, 1900, 2100],
+                        borderColor: 'rgb(16, 185, 129)',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 柱状图 - 各品类销售对比
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            const barChart = new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['手机', '电脑', '平板', '穿戴设备', '音频设备'],
+                    datasets: [{
+                        label: '销售额',
+                        // 修复：正确添加 data 键
+                        data: [9876000, 8505000, 4450000, 5862500, 6912000],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(245, 158, 11)',
+                            'rgb(139, 92, 246)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // 饼图 - 用户来源分布
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            const pieChart = new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['搜索引擎', '社交媒体', '直接访问', '推荐链接', '广告'],
+                    datasets: [{
+                        data: [35, 25, 20, 12, 8],
+                        backgroundColor: [
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(16, 185, 129, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(139, 92, 246, 0.8)',
+                            'rgba(239, 68, 68, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgb(59, 130, 246)',
+                            'rgb(16, 185, 129)',
+                            'rgb(245, 158, 11)',
+                            'rgb(139, 92, 246)',
+                            'rgb(239, 68, 68)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // 雷达图 - 产品性能评估
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            const radarChart = new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['性能', '设计', '价格', '功能', '用户体验', '售后服务'],
+                    datasets: [{
+                        label: 'iPhone 14',
+                        // 修复：正确添加 data 键
+                        data: [90, 95, 70, 85, 88, 80],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: 'rgb(59, 130, 246)',
+                        pointBackgroundColor: 'rgb(59, 130, 246)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(59, 130, 246)'
+                    }, {
+                        label: 'Samsung Galaxy',
+                        // 修复：正确添加 data 键
+                        data: [85, 88, 80, 90, 82, 85],
+                        backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                        borderColor: 'rgb(16, 185, 129)',
+                        pointBackgroundColor: 'rgb(16, 185, 129)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgb(16, 185, 129)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 100
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
